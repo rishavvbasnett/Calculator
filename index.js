@@ -14,6 +14,15 @@ function divide(num1, num2) {
     return (num1/num2).toFixed(2)
 }
 
+function percent(num1, num2) {
+    return num1/100*num2
+}
+
+function exponent(num1, num2) {
+    return Math.pow(num1, num2)
+}
+
+
 function operate(num1, operator, num2){
     switch (operator) {
         case "+":
@@ -24,6 +33,10 @@ function operate(num1, operator, num2){
             return multiply(num1, num2)           
         case "÷":
             return divide(num1, num2)
+        case "%":
+            return percent(num1, num2)
+        case "^":
+            return exponent(num1, num2)
     }
 }
 
@@ -42,7 +55,7 @@ let operatorCount = 0
 allButtons.forEach(button => button.addEventListener("click", e => {
     let buttonClicked = e.target.textContent
 
-    if ("+-×÷".includes(buttonClicked)) {
+    if ("+-×÷%^".includes(buttonClicked)) {
         operatorCount++
     }
 
@@ -66,7 +79,7 @@ allButtons.forEach(button => button.addEventListener("click", e => {
         num1 = Number(parts[0])
         num2 = Number(parts[1])
         answer = operate(num1, operator, num2)
-        fullExpression = answer
+        fullExpression = answer.toString()
     }
     else if (buttonClicked === "Del") {
         fullExpression = fullExpression.substring(0,(fullExpression.length-1))
@@ -82,6 +95,10 @@ allButtons.forEach(button => button.addEventListener("click", e => {
     } else if (buttonClicked === "×") {
         operator = buttonClicked
     } else if (buttonClicked === "÷") {
+        operator = buttonClicked
+    } else if (buttonClicked === "%") {
+        operator = buttonClicked
+    } else if (buttonClicked === "^") {
         operator = buttonClicked
     }
 
