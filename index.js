@@ -32,20 +32,36 @@ let display = document.querySelector("#Display")
 const allButtons = document.querySelectorAll("#mainContainer button")
 
 let num1= ""
-let operatorIcon = ""
 let num2= ""
 let fullExpression = ""
 let count = 0
 let operator = ""
-answer = 0
+let answer = 0
+let operatorCount = 0
 /* Get num1 first */
 allButtons.forEach(button => button.addEventListener("click", e => {
     let buttonClicked = e.target.textContent
 
+    if ("+-×÷".includes(buttonClicked)) {
+        operatorCount++
+    }
+
+    if (operatorCount === 2) {
+        let parts = fullExpression.split(operator)
+        console.log("Parts = " + parts)
+        num1 = Number(parts[0])
+        num2 = Number(parts[1])
+        answer = operate(num1, operator, num2)
+        fullExpression = answer
+        operatorCount--
+    }
+
     if (buttonClicked === "AC") {
         fullExpression = ""
+        operatorCount=0
     }
     else if (buttonClicked === "=") {
+        operatorCount--
         let parts = fullExpression.split(operator)
         num1 = Number(parts[0])
         num2 = Number(parts[1])
@@ -60,16 +76,21 @@ allButtons.forEach(button => button.addEventListener("click", e => {
     }
 
     if (buttonClicked === "+") {
-        operator = "+"
-    }  else if (buttonClicked === "-") {
-        operator = "-"
+        operator = buttonClicked
+    } else if (buttonClicked === "-") {
+        operator = buttonClicked
     } else if (buttonClicked === "×") {
-        operator = "×"
+        operator = buttonClicked
     } else if (buttonClicked === "÷") {
-        operator = "÷"
+        operator = buttonClicked
     }
 
-    console.log(fullExpression)
+
+    console.log("Start....Full expression = " + fullExpression)
+    console.log("Operator = " + operator)
+    console.log("Operator count = " + operatorCount)
+    console.log("\n")
+
     display.textContent = fullExpression
 
 }))
