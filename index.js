@@ -11,7 +11,12 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-    return (num1/num2).toFixed(2)
+    if (num2===0) {
+        return "Can't divide by zero!"
+    } else {
+        return Number(num1/num2)
+    }
+    
 }
 
 function percent(num1, num2) {
@@ -51,57 +56,129 @@ let count = 0
 let operator = ""
 let answer = 0
 let operatorCount = 0
-/* Get num1 first */
+let decimalCount = 0
+let justCalculated = false
+
 allButtons.forEach(button => button.addEventListener("click", e => {
     let buttonClicked = e.target.textContent
+    
+    if (justCalculated === true && "0123456789.".includes(buttonClicked)) {
+        fullExpression = ""
+        justCalculated = false
+    }
+    if (justCalculated === true && "+-×÷%^".includes(buttonClicked)) {
+        justCalculated = false
+    }
 
     if ("+-×÷%^".includes(buttonClicked)) {
-        operatorCount++
+        if (fullExpression === "") {
+
+        } else {
+            operatorCount++
+        }    
+    } 
+    
+    if ("."===buttonClicked) {
+        decimalCount++
     }
 
     if (operatorCount === 2) {
-        let parts = fullExpression.split(operator)
-        console.log("Parts = " + parts)
-        num1 = Number(parts[0])
-        num2 = Number(parts[1])
+
+        if (fullExpression[0]==="-") {
+            fullExpression = fullExpression.substring(1)
+            let parts = fullExpression.split(operator)
+            if ("×÷%^".includes(operator) && parts[1]==="") {
+                num1 = 0 - Number(parts[0])
+                num2 = 1
+            } else {
+                num1 = 0 - Number(parts[0])
+                num2 = Number(parts[1])
+            }
+        } 
+        else {
+            let parts = fullExpression.split(operator)
+    
+            if ("×÷%^".includes(operator) && parts[1]==="") {
+                num1 = Number(parts[0])
+                num2 = 1
+            } else {
+                num1 = Number(parts[0])
+                num2 = Number(parts[1])
+            }
+        }
+        
         answer = operate(num1, operator, num2)
-        fullExpression = answer
+        fullExpression = +(answer.toFixed(10))
         operatorCount--
     }
 
     if (buttonClicked === "AC") {
         fullExpression = ""
         operatorCount=0
+        operator = ""
+        decimalCount = 0
     }
     else if (buttonClicked === "=") {
-        operatorCount--
-        let parts = fullExpression.split(operator)
-        num1 = Number(parts[0])
-        num2 = Number(parts[1])
-        answer = operate(num1, operator, num2)
-        fullExpression = answer.toString()
+        if ("+-×÷%^".includes(fullExpression[fullExpression.length-1])) {
+
+        } else if (!(fullExpression.includes("+") || fullExpression.includes("-") || fullExpression.includes("×") || 
+            fullExpression.includes("÷") || fullExpression.includes("%") || fullExpression.includes("^"))) {
+
+        } else {
+            if (fullExpression[0]==="-") {
+                fullExpression = fullExpression.substring(1)
+                let parts = fullExpression.split(operator)
+                num1 = 0 - Number(parts[0])
+                num2 = Number(parts[1])
+            } else {
+                let parts = fullExpression.split(operator)
+                num1 = Number(parts[0])
+                num2 = Number(parts[1])
+            }
+            operatorCount--
+            answer = operate(num1, operator, num2)
+            fullExpression = +(answer.toFixed(10))
+            justCalculated = true
+        }
     }
     else if (buttonClicked === "Del") {
+        if ("+-×÷%^".includes(fullExpression[fullExpression.length - 1])) {
+            operator=""
+            operatorCount--
+        }
+        if (fullExpression[fullExpression.length-1]===".") {
+            decimalCount = 0
+        }
         fullExpression = fullExpression.substring(0,(fullExpression.length-1))
     } 
     else {
-        fullExpression += buttonClicked   
+        if (buttonClicked==="." && decimalCount>1) {
+            decimalCount--
+        }
+        else {
+            fullExpression += buttonClicked 
+        }  
     }
 
     if (buttonClicked === "+") {
         operator = buttonClicked
+        decimalCount = 0
     } else if (buttonClicked === "-") {
         operator = buttonClicked
+        decimalCount = 0
     } else if (buttonClicked === "×") {
         operator = buttonClicked
+        decimalCount = 0
     } else if (buttonClicked === "÷") {
         operator = buttonClicked
+        decimalCount = 0
     } else if (buttonClicked === "%") {
         operator = buttonClicked
+        decimalCount = 0
     } else if (buttonClicked === "^") {
         operator = buttonClicked
+        decimalCount = 0
     }
-
 
     console.log("Start....Full expression = " + fullExpression)
     console.log("Operator = " + operator)
@@ -109,5 +186,4 @@ allButtons.forEach(button => button.addEventListener("click", e => {
     console.log("\n")
 
     display.textContent = fullExpression
-
 }))
