@@ -90,7 +90,11 @@ allButtons.forEach(button => button.addEventListener("click", e => {
             if ("×÷%^".includes(operator) && parts[1]==="") {
                 num1 = 0 - Number(parts[0])
                 num2 = 1
-            } else {
+            } else if ("%".includes(operator) && parts[1]==="") {
+                num1 = 0 - Number(parts[0])
+                num2 = 100
+            }
+            else {
                 num1 = 0 - Number(parts[0])
                 num2 = Number(parts[1])
             }
@@ -101,7 +105,11 @@ allButtons.forEach(button => button.addEventListener("click", e => {
             if ("×÷%^".includes(operator) && parts[1]==="") {
                 num1 = Number(parts[0])
                 num2 = 1
-            } else {
+            } else if ("%".includes(operator) && parts[1]==="") {
+                num1 = Number(parts[0])
+                num2 = 100
+            }
+            else {
                 num1 = Number(parts[0])
                 num2 = Number(parts[1])
             }
